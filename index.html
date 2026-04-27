@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<link rel="icon" href="data:image/svg+xml,
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+<text y='70' x='50' text-anchor='middle' font-size='70' fill='red' font-family='Arial' font-weight='bold'>S</text>
+</svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SANADMOVIE - منصتك السنمائية</title>
+
+<!-- Video.js CDN -->
+<link href="https://cdn.jsdelivr.net/npm/video.js@8.23.6/dist/video-js.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/video.js@8.23.6/dist/video.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.6.15/dist/hls.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@4.1.0/dist/videojs-contrib-quality-levels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@1.2.0/dist/videojs-hls-quality-selector.min.js"></script>
+
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ===== RESET & BASE ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+    --bg-primary: #141414;
+    --bg-secondary: #181818;
+    --bg-card: #1f1f1f;
+    --bg-hover: #2a2a2a;
+
+    --accent: #E50914;
+    --accent-hover: #f6121d;
+    --accent-glow: rgba(229,9,20,0.4);
+
+    --gold: #e5b109;
+
+    --text: #ffffff;
+    --text-dim: #b3b3b3;
+    --text-muted: #777;
+
+    --border: #333;
+
+    --radius: 8px;
+    --radius-sm: 4px;
+
+    --shadow: 0 6px 20px rgba(0,0,0,0.7);
+
+    --transition: all 0.25s ease;
+}
+html { scroll-behavior: smooth; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Arial', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* ===== PRELOADER ===== */
+#preloader {
+    position: fixed; inset: 0; z-index: 99999;
+    background: var(--bg-primary);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: opacity 0.8s, visibility 0.8s;
+}
+#preloader.hidden { opacity: 0; visibility: hidden; }
+.preloader-logo { font-size: 48px; font-weight: 900; letter-spacing: 6px; background: linear-gradient(135deg, var(--accent), #ff6b35); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 24px; }
+.preloader-bar { width: 200px; height: 3px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.preloader-bar span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), #ff6b35); animation: preloadBar 1.5s ease-in-out infinite; border-radius: 3px; }
+@keyframes preloadBar { 0% { width: 0; margin-left: 0; } 50% { width: 100%; margin-left: 0; } 100% { width: 0; margin-left: 100%; } }
+
+/* ===== NAVBAR ===== */
+#navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 16px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(20,20,20,0.7) 60%, transparent 100%);
+    transition: var(--transition);
+}
+#navbar.scrolled { background: rgba(10,10,15,0.98); backdrop-filter: blur(20px); box-shadow: 0 4px 30px rgba(0,0,0,0.5); padding: 12px 40px; }
+.nav-logo { font-size: 28px; font-weight: 900; letter-spacing: 3px; cursor: pointer; }
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+    font-size: 14px; color: var(--text-dim); transition: var(--transition);
+    position: relative; font-weight: 500; letter-spacing: 0.5px;
+}
+.nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 2px; background: var(--accent); transform: scaleX(0); transition: var(--transition);
+}
+.nav-links a:hover, .nav-links a.active { color: var(--text); }
+.nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+.nav-search {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    border-radius: 25px; padding: 8px 16px; transition: var(--transition);
+    width: 220px;
+}
+.nav-search:focus-within { border-color: var(--accent); background: rgba(255,255,255,0.1); width: 300px; }
+.nav-search input {
+    background: none; border: none; outline: none; color: var(--text);
+    font-size: 13px; width: 100%; font-family: inherit;
+}
+.nav-search input::placeholder { color: var(--text-muted); }
+.nav-search i { color: var(--text-muted); font-size: 14px; }
+.nav-admin {
+    background: var(--accent); color: white !important; padding: 8px 20px;
+    border-radius: 25px; font-weight: 600; font-size: 13px !important;
+    transition: var(--transition);
+}
+.nav-admin:hover { background: var(--accent-hover); transform: scale(1.02); }
+.nav-admin::after { display: none !important; }
+
+
+.lang-switcher{position:relative;margin-right:18px;}
+.lang-btn{
+    background:rgba(255,255,255,0.06);
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:25px;
+    padding:8px 14px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+}
+.lang-menu{
+    position:absolute;
+    top:110%;
+    right:0;
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    min-width:160px;
+    display:none;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+}
+.lang-menu button{
+    width:100%;
+    background:none;
+    border:none;
+    color:var(--text);
+    text-align:right;
+    padding:12px 14px;
+    cursor:pointer;
+}
+.lang-menu button:hover{background:var(--bg-hover);}
+.lang-switcher.open .lang-menu{display:block;}
+
+/* ===== PAGE SYSTEM ===== */
+.page { display: none; min-height: 100vh; padding-top: 80px; }
+.page.active { display: block; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== HERO SECTION ===== */
+.hero {
+    position: relative; height: 80vh; min-height: 500px;
+    display: flex; align-items: flex-end; padding: 80px 60px;
+    background: linear-gradient(to top, #141414 10%, rgba(20,20,20,0.6) 60%, transparent 100%);
+    overflow: hidden;
+}
+.hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="none"/><circle cx="20" cy="30" r="0.5" fill="%23ffffff" opacity="0.1"/><circle cx="80" cy="20" r="0.5" fill="%23ffffff" opacity="0.08"/><circle cx="50" cy="70" r="0.8" fill="%23ffffff" opacity="0.05"/></svg>');
+    background-size: 200px 200px;
+}
+.hero-bg-grid {
+    position: absolute; inset: 0;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+}
+.hero-content { position: relative; z-index: 2; max-width: 650px; }
+.hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(229,9,20,0.15); border: 1px solid rgba(229,9,20,0.3);
+    padding: 6px 16px; border-radius: 25px; font-size: 12px;
+    color: var(--accent); margin-bottom: 20px; font-weight: 600;
+    letter-spacing: 1px;
+}
+.hero-title { font-size: 56px; font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -1px; }
+.hero-title span { background: linear-gradient(135deg, var(--accent), #ff6b35); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-desc { font-size: 16px; color: var(--text-dim); margin-bottom: 28px; max-width: 550px; line-height: 1.8; }
+.hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+.btn-primary, .btn-secondary {
+    padding: 14px 32px; border-radius: 30px; font-size: 15px;
+    font-weight: 600; cursor: pointer; transition: var(--transition);
+    border: none; display: inline-flex; align-items: center; gap: 10px;
+    font-family: inherit;
+}
+.btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 20px rgba(229,9,20,0.3); }
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(229,9,20,0.4); }
+.btn-secondary { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+
+/* ===== MOVIE SECTIONS ===== */
+.section { padding: 40px 60px; }
+.section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+}
+.section-title { font-size: 22px; font-weight: 700; }
+.section-title i { color: var(--accent); margin-left: 10px; }
+.section-link { color: var(--text-dim); font-size: 13px; transition: var(--transition); cursor: pointer; }
+.section-link:hover { color: var(--accent); }
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+.movie-grid.large { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+
+/* ===== MOVIE CARD ===== */
+.movie-card {
+    position: relative; border-radius: var(--radius);
+    overflow: hidden; cursor: pointer;
+    background: var(--bg-card);
+    transition: var(--transition);
+    aspect-ratio: 2/3;
+}
+.movie-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.6); z-index: 10; }
+.movie-card-poster {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: var(--transition);
+    background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px; color: var(--text-muted);
+}
+.movie-card:hover .movie-card-poster { transform: scale(1.05); }
+.movie-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%, transparent 80%);
+    opacity: 0; transition: var(--transition);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 20px;
+}
+.movie-card:hover .movie-card-overlay { opacity: 1; }
+.movie-card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.movie-card-meta { font-size: 12px; color: var(--text-dim); display: flex; gap: 12px; }
+.movie-card-play {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+    width: 56px; height: 56px; border-radius: 50%;
+    background: rgba(229,9,20,0.9); border: 2px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: var(--transition);
+    cursor: pointer;
+}
+.movie-card:hover .movie-card-play { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.movie-card-play i { color: white; font-size: 20px; margin-right: 3px; }
+.movie-card-year {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+    padding: 4px 10px; border-radius: 6px; font-size: 11px; color: var(--text-dim);
+}
+
+/* ===== CATEGORY BADGES ===== */
+.category-tag {
+    display: inline-block; padding: 4px 12px; border-radius: 6px;
+    font-size: 11px; font-weight: 500; margin: 2px;
+    background: rgba(255,255,255,0.06); color: var(--text-dim);
+    border: 1px solid var(--border);
+    transition: var(--transition); cursor: pointer;
+}
+.category-tag:hover { background: rgba(229,9,20,0.15); border-color: var(--accent); color: var(--accent); }
+.category-tag.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+/* ===== WATCH PAGE ===== */
+.watch-container { padding: 0; background: #000; position: relative; }
+.watch-player-wrapper {
+    width: 100%; background: #000;
+    position: relative;
+}
+.watch-player-wrapper video { width: 100%; display: block; max-height: 80vh; }
+.watch-info {
+    padding: 30px 60px; background: var(--bg-primary);
+    max-width: 1200px; margin: 0 auto;
+}
+.watch-title { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+.watch-meta { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+.watch-meta span { font-size: 14px; color: var(--text-dim); }
+.watch-meta .rating { color: var(--gold); }
+.watch-meta .year { color: var(--text-dim); }
+.watch-desc { font-size: 15px; color: var(--text-dim); line-height: 1.8; max-width: 800px; margin-bottom: 24px; }
+.watch-categories { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+
+/* ===== ADMIN PANEL ===== */
+.admin-container { padding: 30px 60px; max-width: 1400px; margin: 0 auto; }
+.admin-header { margin-bottom: 32px; }
+.admin-header h1 { font-size: 28px; font-weight: 800; }
+.admin-header h1 i { color: var(--accent); margin-left: 12px; }
+.admin-header p { color: var(--text-dim); font-size: 14px; margin-top: 4px; }
+.admin-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px; margin-bottom: 32px;
+}
+.stat-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+    transition: var(--transition);
+}
+.stat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.stat-card-number { font-size: 32px; font-weight: 800; }
+.stat-card-number.accent { color: var(--accent); }
+.stat-card-number.gold { color: var(--gold); }
+.stat-card-number.green { color: #2ecc71; }
+.stat-card-label { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+
+.admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.admin-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px;
+}
+.admin-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+.admin-card h3 i { color: var(--accent); margin-left: 10px; }
+
+/* ===== FORM ===== */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 6px; font-weight: 500; }
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%; background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px 16px; color: var(--text); font-size: 14px;
+    transition: var(--transition); font-family: inherit;
+    outline: none;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(229,9,20,0.1);
+}
+.form-group textarea { resize: vertical; min-height: 80px; }
+.form-group input[type="file"] {
+    padding: 10px; cursor: pointer;
+}
+.form-group input[type="file"]::file-selector-button {
+    background: var(--accent); color: white; border: none;
+    padding: 8px 16px; border-radius: 6px; cursor: pointer;
+    font-family: inherit; font-size: 13px;
+    transition: var(--transition);
+}
+.form-group input[type="file"]::file-selector-button:hover { background: var(--accent-hover); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.btn-submit {
+    background: var(--accent); color: white; border: none;
+    padding: 14px 32px; border-radius: var(--radius-sm);
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    transition: var(--transition); width: 100%; font-family: inherit;
+}
+.btn-submit:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.btn-danger {
+    background: rgba(229,9,20,0.1); color: var(--accent);
+    border: 1px solid rgba(229,9,20,0.3); padding: 8px 16px;
+    border-radius: var(--radius-sm); cursor: pointer;
+    font-size: 13px; transition: var(--transition);
+    font-family: inherit;
+}
+.btn-danger:hover { background: var(--accent); color: white; }
+
+/* ===== ADMIN MOVIE LIST ===== */
+.admin-movie-list { margin-top: 16px; }
+.admin-movie-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 12px 16px; border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    transition: var(--transition);
+}
+.admin-movie-item:hover { background: rgba(255,255,255,0.05); border-color: var(--text-muted); }
+.admin-movie-thumb {
+    width: 48px; height: 64px; border-radius: 4px;
+    background: linear-gradient(135deg, var(--bg-hover), var(--bg-card));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: var(--text-muted); flex-shrink: 0;
+    overflow: hidden;
+}
+.admin-movie-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.admin-movie-info { flex: 1; min-width: 0; }
+.admin-movie-info h4 { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-movie-info p { font-size: 12px; color: var(--text-muted); }
+.admin-movie-actions { display: flex; gap: 8px; }
+
+/* ===== SEARCH PAGE ===== */
+.search-container { padding: 30px 60px; max-width: 1200px; margin: 0 auto; }
+.search-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; }
+.search-results { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+.search-empty {
+    text-align: center; padding: 80px 20px; color: var(--text-muted);
+}
+.search-empty i { font-size: 64px; margin-bottom: 16px; display: block; }
+.search-empty h3 { font-size: 20px; margin-bottom: 8px; color: var(--text-dim); }
+
+/* ===== FOOTER ===== */
+.footer {
+    background: var(--bg-secondary); padding: 40px 60px 24px;
+    border-top: 1px solid var(--border); margin-top: 40px;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 32px; }
+.footer-brand h3 { font-size: 22px; font-weight: 800; margin-bottom: 12px; }
+.footer-brand h3 span { color: var(--accent); }
+.footer-brand p { color: var(--text-dim); font-size: 13px; line-height: 1.8; }
+.footer h4 { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+.footer a { display: block; color: var(--text-muted); font-size: 13px; margin-bottom: 10px; transition: var(--transition); }
+.footer a:hover { color: var(--text); }
+.footer-bottom { padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.footer-bottom p { font-size: 13px; color: var(--text-muted); }
+.footer-socials { display: flex; gap: 12px; }
+.footer-socials a {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg-hover); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    transition: var(--transition); font-size: 14px;
+}
+.footer-socials a:hover { background: var(--accent); border-color: var(--accent); color: white; }
+
+/* ===== NOTIFICATION ===== */
+#notification {
+    position: fixed; top: 90px; right: 40px; z-index: 9999;
+    background: var(--bg-card); border: 1px solid var(--accent);
+    padding: 16px 24px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    transform: translateX(120%); opacity: 0;
+    transition: var(--transition);
+    font-size: 14px;
+}
+#notification.show { transform: translateX(0); opacity: 1; }
+#notification i { color: var(--accent); font-size: 18px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .hero { padding: 60px 40px; height: 60vh; }
+    .hero-title { font-size: 40px; }
+    .section { padding: 30px 40px; }
+    .admin-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+    #navbar { padding: 12px 20px; }
+    .nav-links a:not(.nav-admin) { display: none; }
+    .nav-search { width: 140px; }
+    .nav-search:focus-within { width: 200px; }
+    .hero { padding: 40px 20px; height: auto; min-height: 400px; }
+    .hero-title { font-size: 28px; }
+    .hero-desc { font-size: 14px; }
+    .section { padding: 20px 20px; }
+    .movie-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+    .watch-info { padding: 20px; }
+    .admin-container { padding: 20px; }
+    .admin-stats { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer { padding: 30px 20px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+}
+
+/* ===== VIDEO.JS CUSTOMIZATION ===== */
+.video-js { width: 100%; height: auto; aspect-ratio: 16/9; }
+.video-js .vjs-big-play-button {
+    width: 70px; height: 70px; border-radius: 50%;
+    background: rgba(229,9,20,0.85) !important;
+    border: 3px solid rgba(255,255,255,0.2) !important;
+    line-height: 70px; font-size: 30px;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    transition: var(--transition);
+}
+.video-js:hover .vjs-big-play-button { background: var(--accent-hover) !important; transform: translate(-50%, -50%) scale(1.1); }
+.video-js .vjs-control-bar {
+    background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, transparent 100%);
+    padding-top: 20px;
+}
+.video-js .vjs-play-progress { background: var(--accent) !important; }
+.video-js .vjs-slider { background: rgba(255,255,255,0.15) !important; }
+.video-js .vjs-volume-level { background: var(--accent) !important; }
+.video-js .vjs-progress-holder { height: 4px !important; }
+.video-js .vjs-play-progress::before { content: '' !important; width: 12px !important; height: 12px !important; border-radius: 50% !important; background: var(--accent) !important; top: -4px !important; }
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+    text-align: center; padding: 40px; color: var(--text-muted);
+}
+.empty-state i { font-size: 48px; margin-bottom: 12px; display: block; opacity: 0.5; }
+</style>
+</head>
+<body>
+
+<!-- ===== PRELOADER ===== -->
+<div id="preloader">
+    <div class="preloader-logo">SANADMOVIE</div>
+    <div class="preloader-bar"><span></span></div>
+</div>
+
+<!-- ===== NOTIFICATION ===== -->
+<div id="notification"><i class="fas fa-check-circle"></i> <span id="notifMsg">تم بنجاح</span></div>
+
+<!-- ===== NAVBAR ===== -->
+<nav id="navbar">
+    <div style="display:flex;align-items:center;gap:40px;">
+        <div class="nav-logo" onclick="navigate('home')">S<span>ANADMOVIE</span></div>
+        <div class="nav-links">
+            <a href="#" class="active" onclick="navigate('home')" data-page="home">الرئيسية</a>
+            <a href="#" onclick="filterType('فيلم')" data-page="movies">أفلام</a>
+            <a href="#" onclick="filterType('مسلسل')" data-page="series">مسلسلات</a>
+            <a href="#" onclick="filterType('أنمي')" data-page="anime">أنمي</a>
+        </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+        <div class="nav-search">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل..." onkeyup="handleSearch(event)">
+        </div>
+        <div class="lang-switcher" id="langSwitcher">
+            <button class="lang-btn" onclick="toggleLangMenu()">
+                <i class="fas fa-globe"></i>
+                <span id="currentLangLabel">العربية</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="lang-menu">
+                <button onclick="setLanguage('ar')">العربية</button>
+                <button onclick="setLanguage('fr')">Français</button>
+                <button onclick="setLanguage('en')">English</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ===== PAGE: HOME ===== -->
+<div id="page-home" class="page active">
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="hero-bg-grid"></div>
+        <div class="hero-content">
+            <div class="hero-badge"><i class="fas fa-star"></i> أحدث الإضافات</div>
+            <h1 class="hero-title">منصتك السنمائية<br><span>بجودة لا تُضاهى</span></h1>
+            <p class="hero-desc">SANAD هي منصتك الأولى لمشاهدة الأفلام والمسلسلات. قم ب الخاص بك، نظمه، واستمتع بتجربة مشاهدة سينمائية احترافية.</p>
+            <div class="hero-buttons">
+                <button class="btn-secondary" onclick="document.querySelector('.section').scrollIntoView({behavior:'smooth'})"><i class="fas fa-compass"></i> تصفح المكتبة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-tags"></i> التصنيفات</h2>
+        </div>
+        <div id="categoryFilters" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;">
+            <span class="category-tag active" onclick="filterCategory('all',this)">الكل</span>
+        </div>
+    </div>
+
+    <!-- MOVIES SECTION -->
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-film"></i> جميع الأفلام والمسلسلات</h2>
+            <span class="section-link" id="movieCount">0 فيلم</span>
+        </div>
+        <div class="movie-grid large" id="movieGrid">
+            <div class="empty-state" id="emptyMovies">
+                <i class="fas fa-box-open"></i>
+                <h3>لا توجد أفلام بعد</h3>
+                <p style="color:var(--text-muted);font-size:13px;margin-top:8px;">اذهب إلى لوحة الإدارة لرفع أول فيلم</p>
+                <br>
+                <button class="btn-primary" onclick="navigate('admin')" style="font-size:13px;padding:10px 24px;"><i class="fas fa-upload"></i> رفع فيلم</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>S<span>ANADMOVIE</span></h3>
+                <p>منصة سينمائية متكاملة تتيح لك رفع وإدارة ومشاهدة الأفلام والمسلسلات بجودة عالية وتجربة مشاهدة استثنائية.</p>
+            </div>
+            <div>
+                <h4>روابط سريعة</h4>
+                <a href="#" onclick="navigate('home')">الرئيسية</a>
+                <a href="#" onclick="navigate('admin')" title="Admin Access" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid var(--border);opacity:0.55;transition:var(--transition);font-size:13px;"><i class="fas fa-shield-halved"></i></a>
+            </div>
+            <div>
+                <h4>التصنيفات</h4>
+                <a href="#" onclick="filterCategory('all')">الكل</a>
+            </div>
+            <div>
+                <h4>الدعم</h4>
+                <a href="#">المساعدة</a>
+                <a href="#">الشروط والأحكام</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 SANADMOVIE. جميع الحقوق محفوظة.</p>
+            <div class="footer-socials">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- ===== PAGE: WATCH ===== -->
+<div id="page-watch" class="page">
+    <div class="watch-container">
+        <div class="watch-player-wrapper">
+            <video id="watchPlayer" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" playsinline>
+                <p class="vjs-no-js">متصفحك لا يدعم تشغيل الفيديو</p>
+            </video>
+        </div>
+        <div class="watch-info">
+            <h1 class="watch-title" id="watchTitle">عنوان الفيلم</h1>
+            <div class="watch-meta">
+                <span class="rating"><i class="fas fa-star"></i> <span id="watchRating">0.0</span></span>
+                <span class="year"><i class="far fa-calendar"></i> <span id="watchYear">2026</span></span>
+                <span><i class="far fa-clock"></i> <span id="watchDuration">0</span> دقيقة</span>
+                <span><i class="fas fa-eye"></i> <span id="watchViews">0</span> مشاهدة</span>
+            </div>
+            <div class="watch-categories" id="watchCategories"></div>
+            <p class="watch-desc" id="watchDesc">وصف الفيلم...</p>
+            <div style="margin-bottom:16px;color:var(--text-dim);font-size:13px;"><i class="fas fa-sliders-h"></i> يمكنك تغيير الجودة من إعدادات المشغل (360p / 480p / 720p / 1080p حسب الملف)</div><button class="btn-secondary" onclick="navigate('home')"><i class="fas fa-arrow-right"></i> العودة للرئيسية</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== PAGE: ADMIN ===== -->
+<div id="page-admin" class="page">
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-crown"></i> لوحة التحكم</h1>
+            <p>إدارة الأفلام والمسلسلات - رفع، تعديل، حذف</p>
+        </div>
+
+        <!-- STATS -->
+        <div class="admin-stats" id="adminStats">
+            <div class="stat-card">
+                <div class="stat-card-number accent" id="statTotal">0</div>
+                <div class="stat-card-label">إجمالي الأفلام</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-number gold" id="statMovies">0</div>
+                <div class="stat-card-label">أفلام</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-number green" id="statSeries">0</div>
+                <div class="stat-card-label">مسلسلات</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-number" id="statViews">0</div>
+                <div class="stat-card-label">إجمالي المشاهدات</div>
+            </div>
+        </div>
+
+        <div class="admin-grid">
+            <!-- UPLOAD FORM -->
+            <div class="admin-card">
+                <h3><i class="fas fa-plus-circle"></i> إضافة فيلم / مسلسل جديد</h3>
+                <form id="movieForm" onsubmit="addMovie(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>عنوان الفيلم</label>
+                            <input type="text" id="movieTitle" placeholder="مثال: فيلم الأكشن الجديد" required>
+                        </div>
+                        <div class="form-group">
+                            <label>سنة الإصدار</label>
+                            <input type="number" id="movieYear" placeholder="2026" value="2026" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>النوع</label>
+                            <select id="movieType">
+                                <option value="فيلم">فيلم</option>
+                                <option value="مسلسل">مسلسل</option>
+                                <option value="وثائقي">وثائقي</option>
+                                <option value="أنمي">أنمي</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>التصنيف</label>
+                            <input type="text" id="movieGenre" placeholder="أكشن، دراما، رعب (مفصول بفواصل)" value="أكشن">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>المدة (بالدقائق)</label>
+                            <input type="number" id="movieDuration" placeholder="120" value="120">
+                        </div>
+                        <div class="form-group">
+                            <label>التقييم (من 10)</label>
+                            <input type="number" id="movieRating" placeholder="8.5" value="7.5" step="0.1" max="10">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>الوصف</label>
+                        <textarea id="movieDesc" placeholder="اكتب وصفاً للفيلم ...">فيلم مميز يستحق المشاهدة</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>رابط اليوتيوب (اختياري - للمعاينة)</label>
+                        <input type="text" id="movieTrailer" placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+                    <div class="form-group">
+                        <label>ملصق الفيلم (Poster) - صورة</label>
+                        <input type="file" id="moviePoster" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>ملف الفيديو (MP4, MKV, WEBM)</label>
+                        <input type="file" id="movieVideo" accept="video/*">
+                    </div>
+                    <div class="form-group">
+                        <label>أو رابط فيديو مباشر</label>
+                        <input type="text" id="movieVideoUrl" placeholder="https://example.com/video.mp4">
+                    </div>
+                    <button type="submit" class="btn-submit"><i class="fas fa-cloud-upload-alt"></i> رفع الفيلم</button>
+                </form>
+            </div>
+
+            <!-- MOVIE LIST -->
+            <div class="admin-card">
+                <h3><i class="fas fa-list"></i> قائمة الأفلام</h3>
+                <div id="adminMovieList">
+                    <div class="empty-state" style="padding:20px;">
+                        <i class="fas fa-inbox" style="font-size:32px;"></i>
+                        <p style="font-size:13px;">لا توجد أفلام. قم برفع أول فيلم!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+// =============================================================
+// ===== DATABASE (LocalStorage) =====
+// =============================================================
+let movies = JSON.parse(localStorage.getItem('sanad_movies')) || [];
+let currentFilter = 'all';
+let currentPlayer = null;
+let currentPage = 'home';
+
+// =============================================================
+// ===== NOTIFICATION =====
+// =============================================================
+function notify(msg, icon = 'fa-check-circle') {
+    const el = document.getElementById('notification');
+    document.getElementById('notifMsg').textContent = msg;
+    el.querySelector('i').className = 'fas ' + icon;
+    el.classList.add('show');
+    clearTimeout(el._timeout);
+    el._timeout = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// =============================================================
+// ===== ADMIN AUTH =====
+// =============================================================
+
+let adminAuthenticated = sessionStorage.getItem('sanad_admin_auth') === '1';
+
+async function sha256(text) {
+    const data = new TextEncoder().encode(text);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function requestAdminAccess() {
+    const input = prompt('أدخل كلمة مرور لوحة التحكم');
+    if (input === null) return false;
+
+    const enteredHash = await sha256(input);
+    const storedHash = '15ff3f8ff76d005ea19f81b38e34817ca974b43fc65bd2a55e3eec25770df503';
+
+    if (enteredHash === storedHash) {
+        sessionStorage.setItem('sanad_admin_auth', '1');
+        adminAuthenticated = true;
+        notify('تم التحقق بنجاح');
+        return true;
+    }
+
+    notify('كلمة المرور غير صحيحة', 'fa-lock');
+    return false;
+}
+
+// =============================================================
+// ===== NAVIGATION =====
+// =============================================================
+async function navigate(page) {
+    if (page === 'admin' && !adminAuthenticated) {
+        const allowed = await requestAdminAccess();
+        if (!allowed) return;
+    }
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    
+    document.getElementById('page-' + page).classList.add('active');
+    
+    document.querySelectorAll(`.nav-links a[data-page="${page}"]`).forEach(a => a.classList.add('active'));
+    
+    currentPage = page;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    if (page === 'home') renderMovies();
+    if (page === 'admin') renderAdmin();
+    
+    // Destroy player when leaving watch page
+    if (page !== 'watch' && currentPlayer) {
+        currentPlayer.dispose();
+        currentPlayer = null;
+    }
+}
+
+// =============================================================
+// ===== SEARCH =====
+// =============================================================
+function handleSearch(e) {
+    if (e.key === 'Enter') {
+        const q = e.target.value.trim();
+        if (q) {
+            const results = movies.filter(m => 
+                m.title.toLowerCase().includes(q.toLowerCase()) ||
+                m.genre.toLowerCase().includes(q.toLowerCase())
+            );
+            if (results.length > 0) {
+                // Go to first result
+                playMovie(results[0].id);
+            } else {
+                notify('لا توجد نتائج للبحث', 'fa-search');
+            }
+            e.target.value = '';
+        }
+    }
+}
+
+// =============================================================
+// ===== CATEGORIES =====
+// =============================================================
+function getUniqueGenres() {
+    const genres = new Set();
+    movies.forEach(m => {
+        m.genre.split('،').map(g => g.trim()).filter(Boolean).forEach(g => genres.add(g));
+    });
+    return ['الكل', ...Array.from(genres)];
+}
+
+function renderCategories() {
+    const container = document.getElementById('categoryFilters');
+    const allGenres = getUniqueGenres();
+    container.innerHTML = allGenres.map(g => 
+        `<span class="category-tag ${g === currentFilter || (g === 'الكل' && currentFilter === 'all') ? 'active' : ''}" 
+              onclick="filterCategory('${g === 'الكل' ? 'all' : g}', this)">${g}</span>`
+    ).join('');
+}
+
+function filterCategory(cat, el) {
+    currentFilter = cat;
+    if (el) {
+        document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+    } else {
+        renderCategories();
+    }
+    renderMovies();
+}
+
+
+let currentType = 'all';
+
+function filterType(type){
+    currentType = type;
+    renderMovies();
+}
+
+// =============================================================
+// ===== RENDER MOVIES =====
+// =============================================================
+function renderMovies() {
+    const grid = document.getElementById('movieGrid');
+    const empty = document.getElementById('emptyMovies');
+    const count = document.getElementById('movieCount');
+    
+    let filtered = movies;
+
+    if (currentType !== 'all') {
+        filtered = filtered.filter(m => m.type === currentType);
+    }
+    if (currentFilter !== 'all') {
+        filtered = movies.filter(m => m.genre.includes(currentFilter));
+    }
+    
+    document.getElementById('movieCount').textContent = filtered.length + ' فيلم' + (filtered.length > 1 ? '/مسلسل' : '');
+    
+    if (filtered.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <h3>${movies.length === 0 ? 'لا توجد أفلام بعد' : 'لا توجد نتائج لهذا التصنيف'}</h3>
+                <p style="color:var(--text-muted);font-size:13px;margin-top:8px;">
+                    ${movies.length === 0 ? 'اذهب إلى لوحة الإدارة لرفع أول فيلم' : 'جرب تصفح تصنيف آخر'}
+                </p>
+                ${movies.length === 0 ? '<br><button class="btn-primary" onclick="navigate(\'admin\')" style="font-size:13px;padding:10px 24px;"><i class="fas fa-upload"></i> رفع فيلم</button>' : ''}
+            </div>
+        `;
+        return;
+    }
+    
+    grid.innerHTML = filtered.map(m => `
+        <div class="movie-card" onclick="playMovie('${m.id}')">
+            <div class="movie-card-poster" style="${m.poster ? `background-image:url('${m.poster}');background-size:cover;background-position:center;` : ''}">
+                ${m.poster ? '' : '<i class="fas fa-film"></i>'}
+            </div>
+            <span class="movie-card-year">${m.year}</span>
+            <div class="movie-card-play"><i class="fas fa-play"></i></div>
+            <div class="movie-card-overlay">
+                <div class="movie-card-title">${m.title}</div>
+                <div class="movie-card-meta">
+                    <span><i class="fas fa-star" style="color:var(--gold);"></i> ${m.rating}</span>
+                    <span>${m.type}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    renderCategories();
+}
+
+// =============================================================
+// ===== PLAY MOVIE =====
+// =============================================================
+function playMovie(id) {
+    const movie = movies.find(m => m.id === id);
+    if (!movie) { notify('الفيلم غير موجود', 'fa-exclamation-circle'); return; }
+    
+    // Increment views
+    movie.views = (movie.views || 0) + 1;
+    saveMovies();
+    
+    navigate('watch');
+    
+    document.getElementById('watchTitle').textContent = movie.title;
+    document.getElementById('watchRating').textContent =
+    document.getElementById('watchRating').textContent = movie.rating;
+    document.getElementById('watchYear').textContent = movie.year;
+    document.getElementById('watchDuration').textContent = movie.duration || 0;
+    document.getElementById('watchViews').textContent = movie.views || 0;
+    document.getElementById('watchDesc').textContent = movie.desc || 'لا يوجد وصف';
+    
+    const cats = document.getElementById('watchCategories');
+    cats.innerHTML = movie.genre.split('،').map(g => 
+        `<span class="category-tag">${g.trim()}</span>`
+    ).filter(Boolean).join('');
+    
+    // Setup player
+    setTimeout(() => {
+        if (currentPlayer) {
+            currentPlayer.dispose();
+            currentPlayer = null;
+        }
+        
+        const videoEl = document.getElementById('watchPlayer');
+        const videoSrc = movie.videoUrl || (movie.videoData ? movie.videoData : '');
+        
+        if (videoSrc) {
+            // Check if it's an HLS stream
+            if (videoSrc.includes('.m3u8')) {
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(videoSrc);
+                    hls.attachMedia(videoEl);
+                    currentPlayer = videojs('watchPlayer', { 
+                        controls: true,
+                        autoplay: true,
+                        fill: true,
+                        html5: {
+                            hls: {
+                                overrideNative: true
+                            }
+                        }
+                    });
+                } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+                    videoEl.src = videoSrc;
+                    currentPlayer = videojs('watchPlayer', { controls: true, autoplay: true, fill: true });
+                }
+            } else {
+                // Regular video file
+                videoEl.src = videoSrc;
+                currentPlayer = videojs('watchPlayer', { 
+                    controls: true, 
+                    autoplay: true,
+                    fill: true
+                });
+            }
+        } else {
+            // No video source - show a message
+            currentPlayer = videojs('watchPlayer', { controls: true, fill: true });
+            notify('هذا الفيلم لا يحتوي على ملف فيديو بعد. قم برفع الفيديو من لوحة التحكم.', 'fa-exclamation-triangle');
+        }
+        
+        if (currentPlayer && typeof currentPlayer.hlsQualitySelector === 'function') {
+            currentPlayer.hlsQualitySelector({ displayCurrentQuality: true });
+        }
+
+        currentPlayer.ready(function() {
+            this.on('error', function() {
+                console.warn('Video playback error - file may not exist yet');
+            });
+        });
+        
+    }, 300);
+}
+
+// =============================================================
+// ===== ADMIN RENDER =====
+// =============================================================
+function renderAdmin() {
+    const list = document.getElementById('adminMovieList');
+    const stats = document.getElementById('adminStats');
+    
+    const total = movies.length;
+    const movieCount = movies.filter(m => m.type === 'فيلم').length;
+    const seriesCount = movies.filter(m => m.type === 'مسلسل').length;
+    const totalViews = movies.reduce((sum, m) => sum + (m.views || 0), 0);
+    
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statMovies').textContent = movieCount;
+    document.getElementById('statSeries').textContent = seriesCount;
+    document.getElementById('statViews').textContent = totalViews;
+    
+    if (movies.length === 0) {
+        list.innerHTML = `
+            <div class="empty-state" style="padding:20px;">
+                <i class="fas fa-inbox" style="font-size:32px;"></i>
+                <p style="font-size:13px;">لا توجد أفلام. قم برفع أول فيلم!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    list.innerHTML = movies.map(m => `
+        <div class="admin-movie-item">
+            <div class="admin-movie-thumb">
+                ${m.poster ? `<img src="${m.poster}" alt="${m.title}">` : '<i class="fas fa-film"></i>'}
+            </div>
+            <div class="admin-movie-info">
+                <h4>${m.title}</h4>
+                <p>${m.type} • ${m.year} • ${m.views || 0} مشاهدة • تقييم ${m.rating}</p>
+            </div>
+            <div class="admin-movie-actions">
+                <button class="btn-danger" onclick="deleteMovie('${m.id}')"><i class="fas fa-trash"></i></button>
+                <button class="btn-secondary" onclick="navigate('home');setTimeout(()=>playMovie('${m.id}'),300)" style="padding:8px 16px;font-size:13px;">
+                    <i class="fas fa-play"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// =============================================================
+// ===== ADD MOVIE =====
+// =============================================================
+function addMovie(e) {
+    e.preventDefault();
+    
+    const title = document.getElementById('movieTitle').value.trim();
+    const year = document.getElementById('movieYear').value;
+    const type = document.getElementById('movieType').value;
+    const genre = document.getElementById('movieGenre').value.trim();
+    const duration = document.getElementById('movieDuration').value;
+    const rating = document.getElementById('movieRating').value;
+    const desc = document.getElementById('movieDesc').value.trim();
+    const trailer = document.getElementById('movieTrailer').value.trim();
+    const posterFile = document.getElementById('moviePoster').files[0];
+    const videoFile = document.getElementById('movieVideo').files[0];
+    const videoUrl = document.getElementById('movieVideoUrl').value.trim();
+    
+    if (!title) { notify('الرجاء إدخال عنوان الفيلم', 'fa-exclamation-circle'); return; }
+    
+    const id = 'mov_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    
+    const movie = {
+        id,
+        title,
+        year: parseInt(year) || 2026,
+        type,
+        genre: genre || 'أكشن',
+        duration: parseInt(duration) || 0,
+        rating: parseFloat(rating) || 7.5,
+        desc: desc || 'فيلم مميز',
+        trailer,
+        views: 0,
+        poster: null,
+        videoUrl: null,
+        videoData: null,
+        date: new Date().toISOString()
+    };
+    
+    // Process poster
+    if (posterFile) {
+        const reader = new FileReader();
+        reader.onload = function(pe) {
+            movie.poster = pe.target.result;
+            processVideo();
+        };
+        reader.readAsDataURL(posterFile);
+    } else {
+        processVideo();
+    }
+    
+    function processVideo() {
+        if (videoFile) {
+            // Check file size - warn if > 100MB
+            if (videoFile.size > 100 * 1024 * 1024) {
+                if (!confirm(`حجم الملف كبير (${(videoFile.size / (1024*1024)).toFixed(1)} MB). هل تريد المتابعة؟ قد يؤثر على أداء الموقع.`)) {
+                    return;
+                }
+            }
+            const reader = new FileReader();
+            reader.onload = function(ve) {
+                movie.videoData = ve.target.result;
+                finishAdd(movie);
+            };
+            reader.readAsDataURL(videoFile);
+        } else if (videoUrl) {
+            movie.videoUrl = videoUrl;
+            finishAdd(movie);
+        } else {
+            movie.videoUrl = null;
+            finishAdd(movie);
+        }
+    }
+}
+
+function finishAdd(movie) {
+    movies.push(movie);
+    saveMovies();
+    
+    notify(`✅ تم رفع "${movie.title}" بنجاح!`);
+    
+    // Reset form
+    document.getElementById('movieForm').reset();
+    document.getElementById('movieYear').value = '2026';
+    document.getElementById('movieDuration').value = '120';
+    document.getElementById('movieRating').value = '7.5';
+    
+    renderAdmin();
+    renderMovies();
+    renderCategories();
+    navigate('admin');
+}
+
+// =============================================================
+// ===== DELETE MOVIE =====
+// =============================================================
+function deleteMovie(id) {
+    const movie = movies.find(m => m.id === id);
+    if (!movie) return;
+    
+    if (!confirm(`هل أنت متأكد من حذف "${movie.title}"؟ لا يمكن التراجع عن هذا الإجراء.`)) return;
+    
+    movies = movies.filter(m => m.id !== id);
+    saveMovies();
+    
+    notify(`🗑️ تم حذف "${movie.title}"`);
+    renderAdmin();
+    renderMovies();
+    renderCategories();
+    
+    // If on watch page and watching this movie, go home
+    if (currentPage === 'watch' && currentPlayer) {
+        currentPlayer.dispose();
+        currentPlayer = null;
+        navigate('home');
+    }
+}
+
+// =============================================================
+// ===== PERSISTENCE =====
+// =============================================================
+function saveMovies() {
+    localStorage.setItem('sanad_movies', JSON.stringify(movies));
+}
+
+// =============================================================
+// ===== SAMPLE MOVIES (for demo) =====
+// =============================================================
+
+function loadSampleMovies() {
+    const DEMO_VERSION = '2026_refresh_pack_01';
+    if (localStorage.getItem('sanad_demo_version') === DEMO_VERSION && movies.length > 0) return;
+
+    const samples = [
+    {
+        id: 'movie_001',
+        title: 'Big Buck Bunny',
+        year: 2008,
+        type: 'فيلم',
+        genre: 'رسوم متحركة، كوميديا',
+        duration: 10,
+        rating: 8.7,
+        desc: 'فيلم قصير مفتوح المصدر من إنتاج Blender Foundation، يجري اختبار المشغل.',
+        views: 12500,
+        poster: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Big_buck_bunny_poster_big.jpg/800px-Big_buck_bunny_poster_big.jpg',
+        videoUrl: 'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4',
+        date: new Date().toISOString()
+    },
+    {
+        id: 'movie_002',
+        title: 'Sintel',
+        year: 2010,
+        type: 'فيلم',
+        genre: 'رسوم متحركة، دراما، فنتازيا',
+        duration: 15,
+        rating: 8.5,
+        desc: 'فيلم قصير من إنتاج Blender Institute، قصة درامية مؤثرة بجودة عالية.',
+        views: 9800,
+        poster: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Sintel_poster.jpg/800px-Sintel_poster.jpg',
+        videoUrl: 'https://test-videos.co.uk/vids/sintel/mp4/h264/720/Sintel_720_10s_1MB.mp4',
+        date: new Date().toISOString()
+    },
+    {
+        id: 'movie_003',
+        title: 'Tears of Steel',
+        year: 2012,
+        type: 'فيلم',
+        genre: 'خيال علمي، أكشن',
+        duration: 12,
+        rating: 8.3,
+        desc: 'فيلم خيال علمي قصير من Blender Foundation، يجمع بين المؤثرات الحقيقية والرقمية.',
+        views: 7650,
+        poster: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Tears_of_Steel_poster.jpg/800px-Tears_of_Steel_poster.jpg',
+        videoUrl: 'https://test-videos.co.uk/vids/tearsofsteel/mp4/h264/720/Tears_Of_Steel_720_10s_1MB.mp4',
+        date: new Date().toISOString()
+    },
+    {
+        id: 'movie_004',
+        title: 'For Bigger Blazes',
+        year: 2021,
+        type: 'فيلم',
+        genre: 'أكشن، تشويق',
+        duration: 1,
+        rating: 7.8,
+        desc: 'مقطع تجريبي قصير عالي الجودة لاختبار أداء وسرعة التحميل.',
+        views: 5400,
+        poster: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80',
+        videoUrl: 'https://test-videos.co.uk/vids/forbiggerblazes/mp4/h264/720/ForBiggerBlazes_720_10s_1MB.mp4',
+        date: new Date().toISOString()
+    },
+    {
+        id: 'movie_005',
+        title: 'Subaru BRZ',
+        year: 2023,
+        type: 'فيلم',
+        genre: 'رياضة، سيارات',
+        duration: 1,
+        rating: 7.5,
+        desc: 'مقطع دعائي لسيارة Subaru BRZ بجودة عالية لاختبار التشغيل.',
+        views: 3200,
+        poster: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80',
+        videoUrl: 'https://test-videos.co.uk/vids/subaru/mp4/h264/720/Subaru_BRZ_720_10s_1MB.mp4',
+        date: new Date().toISOString()
+    },
+    {
+        id: 'movie_006',
+        title: 'Elephant Dream',
+        year: 2006,
+        type: 'فيلم',
+        genre: 'رسوم متحركة، فنتازيا',
+        duration: 11,
+        rating: 8.1,
+        desc: 'أول فيلم مفتوح المصدر بالكامل من Blender Foundation، قصة سريالية فريدة.',
+        views: 11200,
+        poster: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Elephants_Dream_s5_both.jpg/800px-Elephants_Dream_s5_both.jpg',
+        videoUrl: 'https://test-videos.co.uk/vids/elephantsdream/mp4/h264/720/Elephants_Dream_720_10s_1MB.mp4',
+        date: new Date().toISOString()
+    },
+    {
+        id: 'movie_007',
+        title: 'For Bigger Joyrides',
+        year: 2021,
+        type: 'فيلم',
+        genre: 'أكشن، مغامرة',
+        duration: 1,
+        rating: 7.6,
+        desc: 'مقطع أكشن مثير لاختبار المنصة مع مشاهد سريعة عالية الجودة.',
+        views: 4100,
+        poster: 'https://images.unsplash.com/photo-1533929736458-ca588d08b8fc?auto=format&fit=crop&w=600&q=80',
+        videoUrl: 'https://test-videos.co.uk/vids/forbiggerjoyrides/mp4/h264/720/ForBiggerJoyrides_720_10s_1MB.mp4',
+        date: new Date().toISOString()
+    },
+    {
+        id: 'movie_008',
+        title: 'For Bigger Escapes',
+        year: 2021,
+        type: 'فيلم',
+        genre: 'مغامرة، إثارة',
+        duration: 1,
+        rating: 7.4,
+        desc: 'مشاهد هروب وحركة لاختبار التحميل والتشغيل السلس.',
+        views: 2800,
+        poster: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=600&q=80',
+        videoUrl: 'https://test-videos.co.uk/vids/forbiggerescapes/mp4/h264/720/ForBiggerEscapes_720_10s_1MB.mp4',
+        date: new Date().toISOString()
+    },
+    {
+        id: 'movie_009',
+        title: 'For Bigger Fun',
+        year: 2021,
+        type: 'فيلم',
+        genre: 'كوميديا، تشويق',
+        duration: 1,
+        rating: 7.7,
+        desc: 'مقطع مرح ومشوق لاختبار المنصة بشكل شامل.',
+        views: 3700,
+        poster: 'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=600&q=80',
+        videoUrl: 'https://test-videos.co.uk/vids/forbiggerfun/mp4/h264/720/ForBiggerFun_720_10s_1MB.mp4',
+        date: new Date().toISOString()
+    },
+    {
+        id: 'movie_010',
+        title: 'For Bigger Meltdowns',
+        year: 2021,
+        type: 'فيلم',
+        genre: 'أكشن، خيال علمي',
+        duration: 1,
+        rating: 7.3,
+        desc: 'مقطعحركة وانفجارات لاختبار قوة التحميل والأداء.',
+        views: 2500,
+        poster: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
+        videoUrl: 'https://test-videos.co.uk/vids/forbiggermeltdowns/mp4/h264/720/ForBiggerMeltdowns_720_10s_1MB.mp4',
+        date: new Date().toISOString()
+    }
+];
+
+    movies = samples;
+    saveMovies();
+    localStorage.setItem('sanad_demo_version', DEMO_VERSION);
+}
+
+
+// =============================================================
+// ===== INIT =====
+// =============================================================
+window.onload = function() {
+    // Hide preloader
+    setTimeout(() => {
+        document.getElementById('preloader').classList.add('hidden');
+    }, 1500);
+    
+    // Load movies
+    if (movies.length === 0) {
+        // Ask if user wants sample movies
+        setTimeout(() => {
+            if (movies.length === 0 && confirm('هل تريد تحميل أفلام تجريبية لتجربة الموقع؟')) {
+                loadSampleMovies();
+            } else {
+                renderMovies();
+                renderCategories();
+            }
+        }, 2000);
+    } else {
+        renderMovies();
+        renderCategories();
+    }
+    
+    renderAdmin();
+    
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const nav = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+    
+    // Keyboard shortcut
+    document.addEventListener('keydown', function(e) {
+        // Escape goes home
+        if (e.key === 'Escape' && currentPage !== 'home') {
+            navigate('home');
+        }
+        // Ctrl+K focuses search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            document.getElementById('searchInput').focus();
+        }
+    });
+    
+    console.log('🚀 SANADMOVIE Platform Loaded!');
+    console.log('📊 Movies:', movies.length);
+    console.log('🔧 Admin: Click "لوحة التحكم" to manage');
+};
+
+// ===== MULTI LANGUAGE SYSTEM =====
+const translations = {
+  ar: {
+    search: "ابحث عن فيلم أو مسلسل...",
+    home: "الرئيسية",
+    movies: "أفلام",
+    series: "مسلسلات",
+    anime: "أنمي",
+    latest: "أحدث الإضافات",
+    hero1: "منصتك السنمائية",
+    hero2: "بجودة لا تُضاهى",
+    browse: "تصفح المكتبة",
+    categories: "التصنيفات",
+    allContent: "جميع الأفلام والمسلسلات",
+    footerDesc: "منصة سينمائية متكاملة تتيح لك رفع وإدارة ومشاهدة الأفلام والمسلسلات بجودة عالية.",
+    support: "الدعم"
+  },
+  fr: {
+    search: "Rechercher un film ou une série...",
+    home: "Accueil",
+    movies: "Films",
+    series: "Séries",
+    anime: "Anime",
+    latest: "Derniers ajouts",
+    hero1: "Votre plateforme cinéma",
+    hero2: "avec une qualité inégalée",
+    browse: "Parcourir la bibliothèque",
+    categories: "Catégories",
+    allContent: "Tous les films et séries",
+    footerDesc: "Plateforme cinématographique complète pour gérer et regarder vos contenus.",
+    support: "Support"
+  },
+  en: {
+    search: "Search for a movie or series...",
+    home: "Home",
+    movies: "Movies",
+    series: "Series",
+    anime: "Anime",
+    latest: "Latest additions",
+    hero1: "Your cinema platform",
+    hero2: "with unmatched quality",
+    browse: "Browse library",
+    categories: "Categories",
+    allContent: "All movies and series",
+    footerDesc: "A complete cinematic platform to manage and watch your content.",
+    support: "Support"
+  }
+};
+
+function toggleLangMenu(){
+  document.getElementById('langSwitcher').classList.toggle('open');
+}
+
+function setLanguage(lang){
+  localStorage.setItem('sanad_lang', lang);
+  applyLanguage(lang);
+  document.getElementById('langSwitcher').classList.remove('open');
+}
+
+function applyLanguage(lang){
+  const t = translations[lang] || translations.ar;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.getElementById('currentLangLabel').textContent = 
+      lang === 'ar' ? 'العربية' : (lang === 'fr' ? 'Français' : 'English');
+
+  const search = document.getElementById('searchInput');
+  if(search) search.placeholder = t.search;
+
+  const navHome = document.querySelector('.nav-links a');
+  if(navHome) navHome.textContent = t.home;
+
+  const navLinks = document.querySelectorAll('.nav-links a');
+  if(navLinks[1]) navLinks[1].textContent = t.movies;
+  if(navLinks[2]) navLinks[2].textContent = t.series;
+  if(navLinks[3]) navLinks[3].textContent = t.anime;
+
+  const badge = document.querySelector('.hero-badge');
+  if(badge) badge.innerHTML = '<i class="fas fa-star"></i> ' + t.latest;
+
+  const title = document.querySelector('.hero-title');
+  if(title) title.innerHTML = t.hero1 + '<br><span>' + t.hero2 + '</span>';
+
+  const browseBtn = document.querySelector('.hero-buttons .btn-secondary');
+  if(browseBtn) browseBtn.innerHTML = '<i class="fas fa-compass"></i> ' + t.browse;
+
+  const sectionTitles = document.querySelectorAll('.section-title');
+  if(sectionTitles[0]) sectionTitles[0].innerHTML = '<i class="fas fa-tags"></i> ' + t.categories;
+  if(sectionTitles[1]) sectionTitles[1].innerHTML = '<i class="fas fa-film"></i> ' + t.allContent;
+
+  const footerDesc = document.querySelector('.footer-brand p');
+  if(footerDesc) footerDesc.textContent = t.footerDesc;
+}
+
+document.addEventListener('click', (e)=>{
+  if(!document.getElementById('langSwitcher').contains(e.target)){
+    document.getElementById('langSwitcher').classList.remove('open');
+  }
+});
+
+window.addEventListener('load', ()=>{
+  applyLanguage(localStorage.getItem('sanad_lang') || 'ar');
+});
+
+</script>
+
+</body>
+</html>
